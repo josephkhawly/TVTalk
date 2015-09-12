@@ -1,14 +1,25 @@
 var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
+var request = require('request');
 
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
+// socket.on('user_join', function(username, room_number){
+//     socket.username = username;
+//     socket.room = room_number;
+//     socket.join(room_number);
+// });
 
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
+    request('http://35.3.70.246:8080/tv/getTuned?', function (error, response, body) {
+    	if (!error && response.statusCode == 200) {
+            console.log(JSON.parse(body).offset) // Show the HTML for the Google homepage. 
+      }
+	})
   });
 });
 
