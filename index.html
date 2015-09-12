@@ -11,7 +11,7 @@
       form { 
           background: #000; 
           padding: 3px; 
-          position: fixed;
+          position: absolute;
           bottom: 0; 
           width: 100%; 
       }
@@ -37,9 +37,9 @@
             color: white;
 		}
         
-        .main-title, #key-down {
+        .main-title {
 			color:white;
-			font-size:72px;
+			font-size: 82px;
 		}
     </style>
       
@@ -58,8 +58,9 @@
         var channel = Channel.getCurrentChannel();
         var textBox = document.getElementById('input-box');
         
-        container.innerHTML = channel.getAltTitle();
+        container.innerHTML = channel.getCallSign();
         
+        //On the STB, hide the input box.
         if (!!navigator.setResolution) {
             navigator.setResolution(1280, 720);
             textBox.style.display = 'none';
@@ -87,9 +88,9 @@
      };
   </script>
   </head>
-  <body id="errthing">
+  <body>
       <div class="container">
-          <h2>TVTalk <div id="current-channel"></div></h2>
+          <h2 id="main-title">TVTalk <div id="current-channel"></div></h2>
     <ul id="messages"></ul>
     <form id="input-box" action="">
       <input id="m" autocomplete="off" /><button>Send</button>

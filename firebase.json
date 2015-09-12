@@ -1,0 +1,9 @@
+{
+  "firebase": "tv-talk",
+  "public": ".",
+  "ignore": [
+    "firebase.json",
+    "**/.*",
+    "**/node_modules/**"
+  ]
+}
