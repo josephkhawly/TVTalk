@@ -53,19 +53,18 @@
       navigator.setWebSecurityEnabled(false);
     }
 
-    function keyHandler(e){
+    function getChannel(){
+        
       var container = document.getElementById('current-channel');
         var channel = Channel.getCurrentChannel();
         
         container.innerHTML = channel.getAltTitle();
         
-        
-
       // return false prevents keys from bubbling to UI
       return false;
     }
 
-    window.onload = keyHandler;
+    window.onload = getChannel;
 
     window.onerror = function(errorMsg, url, lineNumber){
        // If Webkit throws an error on the STB - the app crashes. 
@@ -81,7 +80,7 @@
   </head>
   <body>
       <div class="container">
-          <h2>TVTalk for <div id="current-channel"></div>.</h2>
+          <h2>TVTalk for <div id="current-channel"></div></h2>
     <ul id="messages"></ul>
     <form action="">
       <input id="m" autocomplete="off" /><button>Send</button>
