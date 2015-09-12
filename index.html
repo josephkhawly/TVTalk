@@ -1,0 +1,141 @@
+<!doctype html>
+<html>
+  <head>
+    <title>TV-WebSockets</title>
+  <meta name="viewport" content="user-scalable=no, width=1920, height=1080">
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+      body { font: 13px Helvetica, Arial; }
+        
+      form { 
+          background: #000; 
+          padding: 3px; 
+          position: fixed; 
+          bottom: 0; 
+          width: 100%; 
+      }
+        
+      form input { 
+          border: 0; 
+          padding: 10px; 
+          width: 90%; 
+          margin-right: .5%; 
+      }
+        
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
+      #messages { list-style-type: none; margin: 0; padding: 0; }
+      #messages li { padding: 5px 10px; }
+      #messages li:nth-child(odd) { background: #eee; }
+        
+        .container {
+			background-color: black;
+			opacity: 0.5;
+			padding: 50px;
+			min-height: 450px;
+            color: white;
+		}
+        
+        form {
+            
+        }
+    </style>
+      
+    <script type="text/javascript">
+    //If we are a stb, set the resolution
+    if (!!navigator.setResolution) {
+      navigator.setResolution(1280, 720);
+    }
+
+    //Disable websecutiry to bypass CORS issues if any.
+    if (!!navigator.setWebSecurityEnabled){
+      navigator.setWebSecurityEnabled(false);
+    }
+
+    function keyHandler(e){
+      var code = e.keyCode
+        , container = document.getElementById('key-down');
+        
+        
+
+      //Don't for get to put a BREAK after every case OR it will 
+      //Fall through like it does below.
+      switch(code){
+        case 13: // Select / Enter
+        case 48 : // 0
+        case 49 : // 1
+        case 50 : // 2
+        case 51 : // 3
+        case 52 : // 4
+        case 53 : // 5
+        case 54 : // 6
+        case 55 : // 7
+        case 56 : // 8
+        case 57 : // 9
+        case 79 : // Info
+        case 87 : // Rewind Trick play
+        case 9 : // FF Trick play
+        case 65 : //Active
+        case 67 : // Next Trick play
+        case 72 : // red
+        case 74 : // green
+        case 75 : // yellow
+        case 76 : // blue
+        case 80: // Play Trick play
+        case 82 : // Record Trick play
+        case 83 : // Stop Trick play
+        case 85 : // Pause Trick play
+        case 46 : // Back Trick play
+        case 37: //left
+        case 33: //pageup channelUp
+        case 34: //pagedown channelDown
+        case 38: //up
+        case 39: //right
+        case 40: //down
+        case 47: //back
+        case 189 : //dash
+        default :
+          container.innerHTML = code;
+          break;
+      }
+
+      // return false prevents keys from bubbling to UI
+      return false;
+    }
+
+    window.onkeydown = keyHandler;
+
+    window.onerror = function(errorMsg, url, lineNumber){
+       // If Webkit throws an error on the STB - the app crashes. 
+       // To prevent the propagation and therefore the crash 
+       // return true
+
+       // Look for this console.log message in the logs
+       // To access the logs use http://{STB_IP}/itv/getLogs
+       console.log(errorMsg); 
+       return true; 
+     };
+  </script>
+  </head>
+  <body>
+      <div class="container">
+    <ul id="messages"></ul>
+    <form action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
+    <script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+      var socket = io();
+      $('form').submit(function(){
+        socket.emit('chat message', $('#m').val());
+        $('#m').val('');
+        return false;
+      });
+      socket.on('chat message', function(msg){
+        $('#messages').append($('<li>').text(msg));
+      });
+    </script>
+    </div>
+  </body>
+</html>
