@@ -25,9 +25,13 @@ io.on('connection', function(socket){
             var offs=body.offset;
 
             data.set({
-            	programID : pid;
-            	offset : offs; 
-
+                pid : {
+            	   comment : {
+                    text: msg,
+                    offset: offs
+                }
+            }
+                    
             });
 
       }
