@@ -11,7 +11,7 @@
       form { 
           background: #000; 
           padding: 3px; 
-          position: fixed; 
+          position: fixed;
           bottom: 0; 
           width: 100%; 
       }
@@ -43,29 +43,37 @@
 		}
     </style>
       
+    <script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script type="text/javascript">
-    //If we are a stb, set the resolution
-    if (!!navigator.setResolution) {
-      navigator.setResolution(1280, 720);
-    }
 
     //Disable websecutiry to bypass CORS issues if any.
     if (!!navigator.setWebSecurityEnabled){
       navigator.setWebSecurityEnabled(false);
     }
 
-    function getChannel(){
-        
-      var container = document.getElementById('current-channel');
+    function loadUI() {
+         
+        var container = document.getElementById('current-channel');
         var channel = Channel.getCurrentChannel();
+        var textBox = document.getElementById('input-box');
         
         container.innerHTML = channel.getAltTitle();
+        
+        if (!!navigator.setResolution) {
+            navigator.setResolution(1280, 720);
+            textBox.style.display = 'none';
+        
+        } else {
+            
+            
+        }
         
       // return false prevents keys from bubbling to UI
       return false;
     }
 
-    window.onload = getChannel;
+    window.onload = loadUI;
 
     window.onerror = function(errorMsg, url, lineNumber){
        // If Webkit throws an error on the STB - the app crashes. 
@@ -79,15 +87,13 @@
      };
   </script>
   </head>
-  <body>
+  <body id="errthing">
       <div class="container">
           <h2>TVTalk <div id="current-channel"></div></h2>
     <ul id="messages"></ul>
-    <form action="">
+    <form id="input-box" action="">
       <input id="m" autocomplete="off" /><button>Send</button>
     </form>
-    <script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
-    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script>
       var socket = io();
       $('form').submit(function(){
@@ -98,20 +104,6 @@
       socket.on('chat message', function(msg){
         $('#messages').append($('<li>').text(msg));
       });
-    </script>
-    <script type="text/javascript">
-    if (!!navigator.setResolution) {
-      var html = "<p>Hi i am inly on st</p> \
-                  <P>\
-                  aasdf";
-
-      var el = $('#d');
-      el.html(html);
-      ''
-      //popuate dom with STB HTML
-    } else {
-      //popuate dom with client HTML
-    }
     </script>
     </div>
   </body>
