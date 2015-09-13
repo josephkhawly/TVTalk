@@ -18,24 +18,7 @@ app.get('/', function(req, res){
 io.on('connection', function(socket){
   socket.on('chat message', function(msg){
     io.emit('chat message', msg);
-    request('http://35.3.70.246:8080/tv/getTuned?', function (error, response, body) {
-    	if (!error && response.statusCode == 200) {
-            console.log(JSON.parse(body).offset) // Show the HTML for the Google homepage.
-            var pid=body.programId;
-            var offs=body.offset;
 
-            data.set({
-                pid : {
-            	   comment : {
-                    text: msg,
-                    offset: offs
-                }
-            }
-                    
-            });
-
-      }
-	})
   });
 });
 
