@@ -1,15 +1,9 @@
 <!doctype html>
 <html>
   <head>
-    <title>TVTalk</title>
+    <title>TV-WebSockets</title>
   <meta name="viewport" content="user-scalable=no, width=1920, height=1080">
     <style>
-        
-        @font-face {
-            font-family: SF-UI-Display;
-            src: url("SF-UI-Display-Thin.otf") format("opentype");
-        }
-        
       * { margin: 0; padding: 0; box-sizing: border-box; }
         
       body { font: 13px Helvetica, Arial; }
@@ -17,7 +11,7 @@
       form { 
           background: #000; 
           padding: 3px; 
-          position: fixed;
+          position: absolute;
           bottom: 0; 
           width: 100%; 
       }
@@ -29,12 +23,12 @@
           margin-right: .5%; 
       }
         
-      form button { width: 9%; background: rgb(183, 130, 255); border: none; padding: 10px; }
+      form button { width: 9%; background: rgb(130, 224, 255); border: none; padding: 10px; }
       #messages { list-style-type: none; margin: 0; padding: 0; }
       #messages li { padding: 5px 10px; }
-      #messages li:nth-child(odd) { background: #bfbfbf; }
+      #messages li:nth-child(odd) { background: #eee; }
         
-        #tv-ui {
+        .container {
 			background-color: black;
 			opacity: 0.5;
 			padding: 50px;
@@ -43,81 +37,49 @@
             color: white;
 		}
         
-        .browser-ui {
-			background-color: black;
-			opacity: 0.5;
-			padding: 50px;
-			min-height: 750px;
-            width: 300px;
-            color: white;
-		}
-        
-        .browserh2 {
-            font-family: 'SF-UI-Display';
-        }
-        
-        .main-title, #key-down {
+        .main-title {
 			color:white;
-			font-size:72px;
+			font-size: 82px;
 		}
     </style>
-      
     <script src="http://cdn.socket.io/socket.io-1.2.0.js"></script>
     <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
     <script type="text/javascript">
+
     //Disable websecutiry to bypass CORS issues if any.
     if (!!navigator.setWebSecurityEnabled){
       navigator.setWebSecurityEnabled(false);
     }
+
     function loadUI() {
          
         var container = document.getElementById('current-channel');
         var channel = Channel.getCurrentChannel();
         var textBox = document.getElementById('input-box');
         
-        var browserUI = document.getElementById('browser-ui');
-        var tvUI = document.getElementById('tv-ui');
+        container.innerHTML = channel.getCallSign();
         
-        var brh2 = document.getElementById('brh2');
-        var tvh1 = document.getElementById('tvh1');
-        
-        var callSign = channel.getCallSign();
-        
-        switch (callSign) {
-            case "ENCw":
-                container.innerHTML = "Encore";
-                break;
-            case "HB2eHD":
-                container.innerHTML = "HBO";
-                break;
-            case "CBSwHD":
-                container.innerHTML = "CBS";
-                break;
-            case "SCIHD":
-                container.innerHTML = "Science Channel";
-                break;
-        }
-        
+        //On the STB, hide the input box.
         if (!!navigator.setResolution) {
             navigator.setResolution(1280, 720);
-            textBox.style.visibility = 'hidden';
-            
-            tvh1.style.visibility = 'visible';
-            //tvUI.style.width = 300px;
+            textBox.style.display = 'none';
+        
         } else {
-            //tvUI.style.width = 800px;
+            
+            
         }
         
       // return false prevents keys from bubbling to UI
       return false;
     }
-        
+
     window.onload = loadUI;
-        
+
     window.onerror = function(errorMsg, url, lineNumber){
        // If Webkit throws an error on the STB - the app crashes. 
        // To prevent the propagation and therefore the crash 
        // return true
+
        // Look for this console.log message in the logs
        // To access the logs use http://{STB_IP}/itv/getLogs
        console.log(errorMsg); 
@@ -126,18 +88,12 @@
   </script>
   </head>
   <body>
-      <!-- Everything inside this div will only appear on the TV.-->
-      <div id="tv-ui" >
-            <h1 id="tvh1">TVTalk <div id="current-channel"></div></h1>
-          
-            <ul id="messages"></ul>
-             
-          </div>
-      
-      <form id="input-box" action="">
-                <input id="m" autocomplete="off" /><button>Send</button>
-        </form>  
-      
+      <div class="container">
+          <h2 id="main-title">TVTalk <div id="current-channel"></div></h2>
+    <ul id="messages"></ul>
+    <form id="input-box" action="">
+      <input id="m" autocomplete="off" /><button>Send</button>
+    </form>
     <script>
       var socket = io();
       $('form').submit(function(){
@@ -149,6 +105,6 @@
         $('#messages').append($('<li>').text(msg));
       });
     </script>
-    
+    </div>
   </body>
 </html>

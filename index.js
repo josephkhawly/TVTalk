@@ -2,10 +2,7 @@ var app = require('express')();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var request = require('request');
-var Firebase = require("firebase");
-var ref = new Firebase('tv-talk.firebaseIO.com');
 
-var data = ref.child("data");
 app.get('/', function(req, res){
   res.sendFile(__dirname + '/index.html');
 });
